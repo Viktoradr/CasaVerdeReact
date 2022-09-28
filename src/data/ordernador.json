@@ -1,0 +1,14 @@
+[
+  {
+    "nome": "Selecione...",
+    "value": ""
+  },
+  {
+    "nome": "Nome",
+    "value": "nome"
+  },
+  {
+    "nome": "Preço",
+    "value": "preco"
+  }
+]
