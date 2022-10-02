@@ -2,21 +2,25 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { FormularioProps } from "./Iformulario";
 import opcoes from "data/ordernador.json";
 import { OrdenadorPlanta } from "types/OrdenadorPlanta";
 import { Paper, Stack, Typography } from "@mui/material";
 import { SliderCurrency } from "./styles";
 import { SliderThumbComponent } from "./slider";
+import { IFiltro } from "interfaces/IFiltro";
+import { useSetRecoilState } from "recoil";
+import { filtroPlantasState } from "state/atom";
+import { useFiltroDefault } from "state/hooks/useFiltroDefault";
 
-export default function Formulario({
-  ordenador,
-  setOrdenador,
-  filtro,
-  setFiltro,
-}: FormularioProps) {
+export default function Formulario() {
+
+  const opcao = useFiltroDefault()
+  const setFiltroPlantaState = useSetRecoilState<IFiltro>(filtroPlantasState)
+
   const ordernarPorChange = (event: SelectChangeEvent) => {
-    setOrdenador(event.target.value as OrdenadorPlanta);
+    const op = {...opcao}
+    op.ordenador = event.target.value as OrdenadorPlanta
+    setFiltroPlantaState(op)
   };
 
   const filtrarPorChange = (
@@ -24,7 +28,11 @@ export default function Formulario({
     value: number | number[],
     activeThumb: number
   ) => {
-    setFiltro(value);
+    if (Array.isArray(value)) {
+      const op = {...opcao}
+      op.filtro = value as number[]
+      setFiltroPlantaState(op)
+    }
   };
 
   return (
@@ -36,7 +44,7 @@ export default function Formulario({
             label="Ordernar Por"
             labelId="slcOrder"
             id="slcOrder"
-            value={ordenador}
+            value={opcao.ordenador}
             onChange={ordernarPorChange}
             autoWidth
           >
@@ -55,7 +63,7 @@ export default function Formulario({
         >
           <Typography variant="h5" sx={{ width: 120 }} align="center">
             Mín <br />
-            <Typography>R$ {filtro[0]}</Typography>
+            <Typography>R$ {opcao.filtro[0]}</Typography>
           </Typography>
           <SliderCurrency
             components={{ Thumb: SliderThumbComponent }}
@@ -63,7 +71,7 @@ export default function Formulario({
               index === 0 ? "Minimum price" : "Maximum price"
             }
             //defaultValue={[15, 20]}
-            value={filtro}
+            value={opcao.filtro}
             step={1}
             min={10}
             max={100}
@@ -71,7 +79,7 @@ export default function Formulario({
           />
           <Typography variant="h5" sx={{ width: 120 }} align="center">
             Máx <br />
-            <Typography>R$ {filtro[1]}</Typography>
+            <Typography>R$ {opcao.filtro[1]}</Typography>
           </Typography>
         </Stack>
       </Stack>

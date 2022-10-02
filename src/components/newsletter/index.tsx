@@ -6,7 +6,7 @@ import { Form, Newsletter, Container, ContainerText, Error } from "./styles";
 export default function AssinaturaNewsletter() {
   const formik: any = useFormik({
     initialValues: {
-      userEmail: "viitiinxd@gmail.com"
+      userEmail: ""
     },
     validate: function (values: any) {
       const errors = {} as any;
